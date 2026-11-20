@@ -1,5 +1,6 @@
 import os
 import mysql.connector
+import pandas as pd
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -24,3 +25,11 @@ def lade(con, tabelle, df):
     for i in range(0, len(zeilen), 50000):
         cur.executemany(sql, zeilen[i:i + 50000])
     con.commit()
+
+def abfrage(sql):
+    con = verbinde()
+    cur = con.cursor()
+    cur.execute(sql)
+    df = pd.DataFrame.from_records(cur.fetchall(), columns=cur.column_names, coerce_float=True)
+    con.close()
+    return df
