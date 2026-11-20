@@ -34,6 +34,6 @@ CREATE TABLE wetter (
 
 CREATE TABLE feiertag (
     datum             DATE          NOT NULL,
-    name              VARCHAR(60)   NOT NULL,
+    name              VARCHAR(110)   NOT NULL,
     PRIMARY KEY (datum)
 );
