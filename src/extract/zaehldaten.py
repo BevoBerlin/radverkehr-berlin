@@ -24,6 +24,8 @@ def lese_zaehldaten(jahre, datei=DATEI):
     wb.close()
     return pd.DataFrame(daten, columns=["zeitpunkt", "zaehlstelle_code", "anzahl", "farbe"])
 
+def lese_standorte(datei=DATEI):
+    return pd.read_excel(datei, sheet_name="Standortdaten")
 
 if __name__ == "__main__":
     df = lese_zaehldaten([2023, 2024, 2025])
