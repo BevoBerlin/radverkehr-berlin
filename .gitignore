@@ -5,7 +5,7 @@ data/processed/*
 !data/processed/.gitkeep
 logs/*
 !logs/.gitkeep
-pycache/
+__pycache__/
 .ipynb_checkpoints/
 .venv/
 .idea/

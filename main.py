@@ -5,6 +5,7 @@ from src.extract.zaehldaten import lese_zaehldaten, lese_standorte
 from src.transform.zaehldaten import transformiere_zaehlung, transformiere_zaehlstelle
 from src.extract.wetter import lese_wetter
 from src.transform.wetter import transformiere_wetter
+from src.load.datenbank import verbinde, leere, lade
 
 JAHRE = [2023, 2024, 2025]
 
@@ -41,3 +42,17 @@ print(len(feiertag))
 feiertag.to_csv("data/processed/feiertag.csv", index=False)
 with open("logs/etl.log", "a", encoding="utf-8") as f:
     f.write(f"{datetime.now():%Y-%m-%d %H:%M} feiertag: {len(feiertag)} Zeilen\n")
+
+# NEU: Laden in MariaDB (zaehlstelle vor zaehlung wegen Fremdschlüssel)
+con = verbinde()
+leere(con)
+cur = con.cursor()
+geladen = {}
+for t, df in [("zaehlstelle", s), ("zaehlung", z), ("wetter", wetter), ("feiertag", feiertag)]:
+    lade(con, t, df)
+    cur.execute(f"SELECT COUNT(*) FROM {t}")
+    geladen[t] = cur.fetchone()[0]
+con.close()
+print(geladen)
+with open("logs/etl.log", "a", encoding="utf-8") as f:
+    f.write(f"{datetime.now():%Y-%m-%d %H:%M} geladen: {geladen}\n")
